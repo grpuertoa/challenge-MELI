@@ -13,7 +13,7 @@ Este desarrollo comprende el desafio tecnico propuesto por Mercado libre y se ba
 
 ## Guia de Uso
 
- ###  1. Tecnologias utilizadas:
+###  1. Tecnologias utilizadas:
 
 Descargue y clone el repositorio:
 

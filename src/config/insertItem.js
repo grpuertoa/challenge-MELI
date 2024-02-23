@@ -22,9 +22,7 @@ async function insertItem(newItems) {
       // Insert all items in the array
       const result = await collection.insertMany(batch);
       console.log(
-        `${result.insertedCount} items inserted into the database, batch #: ${
-          Math.floor(i / batchSize) + 1
-        }`
+        `${result.insertedCount} items inserted into the database`
       );
     }
   } finally {

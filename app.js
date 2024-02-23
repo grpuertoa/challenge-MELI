@@ -20,7 +20,7 @@ app.use(express.json());
 app.post("/load-file", upload.single("file"), async (req, res) => {
   try {
     //Params to be asked on postman
-    const { originalname, delimiter } = req.file;
+    const { originalname } = req.file;
 
     //read the file format extracting the original name
     const format = path.extname(originalname).toLowerCase().substring(1);
@@ -33,13 +33,10 @@ app.post("/load-file", upload.single("file"), async (req, res) => {
         req.body.delimiter
       );
       //call apiHandler
-      const apiResponse = await apiHandler.getItems(original, joined, res);
-      // Response
-      console.log("API Handled successfuly, input format: ", format);
+      apiHandler.getItems(original, joined, res);
     } catch (error) {
       console.error("Error handling API:", error.message);
     }
-
     res.json({
       message: `Processed data: successful, format: ${format} `,
     });
