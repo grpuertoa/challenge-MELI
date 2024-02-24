@@ -92,7 +92,7 @@ Si no modifica las configuraciones del app.js en terminos de puertos de ejecucio
 
 Se utilizo la libreria jest para la realizacion de diversas pruebas unitarias, estas abarcan test el los procesadores de archivos, tanto para comprobar la eficacia en procesar archivos esperados, como pruebas para comprobar mensajes de error cuando no se usa un delimiter en los archivos .csv o cuando se ingresa un formato no soportado.
 
-De igual modo se realizan pruebas unitarias para las API y las respuestas recibidas de ellas, priebas para todos los request exitosos asi como pruebas para id inexistentes o undefined.
+De igual modo se realizan pruebas unitarias para las API y las respuestas recibidas de ellas, pruebas para todos los request exitosos asi como pruebas para id inexistentes o undefined.
 
 Para ejecutar las pruebas unitarias despues de instalar todas las dependencias en el paso 2 debe correr el comando:
 
