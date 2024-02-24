@@ -88,6 +88,10 @@ Si no modifica las configuraciones del app.js en terminos de puertos de ejecucio
         delimiter       , (en caso de ser .csv)
 ```
 
+Diagrama de arquitectura del proyecto:
+
+![arquitectura](/src/uploads/architecture.png)
+
 ### 6. Pruebas unitarias:
 
 Se utilizo la libreria jest para la realizacion de diversas pruebas unitarias, estas abarcan test el los procesadores de archivos, tanto para comprobar la eficacia en procesar archivos esperados, como pruebas para comprobar mensajes de error cuando no se usa un delimiter en los archivos .csv o cuando se ingresa un formato no soportado.
