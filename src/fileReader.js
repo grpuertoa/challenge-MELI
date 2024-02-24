@@ -30,7 +30,7 @@ async function processFile(name, format, customDelimiter) {
     return processJsonlFile(stream, joinedData);
   } else {
     // Format not supported
-    return Promise.reject(new Error("Format not supported"));
+    return new Error("Format not supported");
   }
 }
 

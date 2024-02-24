@@ -37,6 +37,7 @@ app.post("/load-file", upload.single("file"), async (req, res) => {
     } catch (error) {
       console.error("Error handling API:", error.message);
     }
+
     res.json({
       message: `Processed data: successful, format: ${format} `,
     });

@@ -9,6 +9,7 @@ const itemsApiUrl = "https://api.mercadolibre.com/items";
 const categoriesApiUrl = "https://api.mercadolibre.com/categories";
 const currencyApiUrl = "https://api.mercadolibre.com/currencies";
 const sellerApiUrl = "https://api.mercadolibre.com/users";
+var headers;
 
 //Retire request for the API request so it doesnt crashes
 async function retireRequest(url, options, attempt = 1) {
@@ -31,15 +32,27 @@ async function retireRequest(url, options, attempt = 1) {
   }
 }
 
-//Get Items from API
-async function getItems(original, joinedData, res) {
+async function createHeader() {
   try {
     //get access Token
     const { access_token } = await getToken();
     //set Header
-    const headers = {
+    headers = {
       Authorization: `Bearer ${access_token}`,
     };
+  } catch (error) {
+    new Error("Could not get Access Token");
+  }
+}
+
+async function getHeader() {
+  return headers;
+}
+
+//Get Items from API
+async function getItems(original, joinedData, res) {
+  try {
+    await createHeader();
     //Batch size to make each items API request
     const batchSize = 5;
     let currentBatch = 0;
@@ -65,14 +78,21 @@ async function getItems(original, joinedData, res) {
 
       //For each response , start the other API requests
       for (let i = 0; i < itemsApiResponse.length; i++) {
-
         if (itemsApiResponse[i].code === 200) {
+          categoryApiResponse = await categoryAPI(
+            itemsApiResponse[i].body.category_id,
+            headers
+          );
 
-          categoryApiResponse = await categoryAPI (itemsApiResponse[i].body.category_id, headers);
+          currencyApiResponse = await currencyAPI(
+            itemsApiResponse[i].body.currency_id,
+            headers
+          );
 
-          currencyApiResponse = await currencyAPI (itemsApiResponse[i].body.currency_id, headers);
-
-          sellerApiResponse = await sellerAPI (itemsApiResponse[i].body.seller_id, headers);
+          sellerApiResponse = await sellerAPI(
+            itemsApiResponse[i].body.seller_id,
+            headers
+          );
 
           //Build the full object to insert in the dataBase
           const newItem = {
@@ -121,7 +141,14 @@ async function getItems(original, joinedData, res) {
       // Send the full object ready to insert in the DB
       await insertFileItems(newItems);
       currentBatch++;
-      console.log("fetching data from API id: ", batchedData[j], "batch number: ", currentBatch, " de: ", batchedData.length);
+      console.log(
+        "fetching data from API id: ",
+        batchedData[j],
+        "batch number: ",
+        currentBatch,
+        " de: ",
+        batchedData.length
+      );
     }
 
     return { apiResponse: 200 };
@@ -133,7 +160,7 @@ async function getItems(original, joinedData, res) {
 
 async function categoryAPI(category_id, headers) {
   if (category_id) {
-    // retire function to the CATEGORIES API
+    // API call from category_id with headers to get category name
     categoryApiResponse = await retireRequest(
       `${categoriesApiUrl}/${category_id}`,
       { headers }
@@ -154,13 +181,20 @@ async function currencyAPI(currency_id, headers) {
 }
 
 async function sellerAPI(seller_id, headers) {
-if (seller_id) {
-  // API call from seller_id with headers to get nickname
-  sellerApiResponse = await retireRequest(
-    `${sellerApiUrl}/${seller_id}`,
-    { headers }
-  );
-  return sellerApiResponse;
+  if (seller_id) {
+    // API call from seller_id with headers to get nickname
+    sellerApiResponse = await retireRequest(`${sellerApiUrl}/${seller_id}`, {
+      headers,
+    });
+    return sellerApiResponse;
+  }
 }
-}
-module.exports = { getItems };
+
+module.exports = {
+  getItems,
+  createHeader,
+  sellerAPI,
+  categoryAPI,
+  currencyAPI,
+  getHeader,
+};
